@@ -297,13 +297,13 @@ typedef enum CAN_DEV_TABLE {
 #endif
 } CAN_DEV_TABLE;
 
-#define FCTP_CLASS template<CAN_DEV_TABLE _bus, FLEXCAN_RXQUEUE_TABLE _rxSize = RX_SIZE_16, FLEXCAN_TXQUEUE_TABLE _txSize = TX_SIZE_16>
-#define FCTP_FUNC template<CAN_DEV_TABLE _bus, FLEXCAN_RXQUEUE_TABLE _rxSize, FLEXCAN_TXQUEUE_TABLE _txSize>
-#define FCTP_OPT FlexCAN_T4<_bus, _rxSize, _txSize>
+#define FCTP_CLASS template<FLEXCAN_RXQUEUE_TABLE _rxSize = RX_SIZE_16, FLEXCAN_TXQUEUE_TABLE _txSize = TX_SIZE_16>
+#define FCTP_FUNC template<FLEXCAN_RXQUEUE_TABLE _rxSize, FLEXCAN_TXQUEUE_TABLE _txSize>
+#define FCTP_OPT FlexCAN_T4<_rxSize, _txSize>
 
-#define FCTPFD_CLASS template<CAN_DEV_TABLE _bus, FLEXCAN_RXQUEUE_TABLE _rxSize = RX_SIZE_16, FLEXCAN_TXQUEUE_TABLE _txSize = TX_SIZE_16>
-#define FCTPFD_FUNC template<CAN_DEV_TABLE _bus, FLEXCAN_RXQUEUE_TABLE _rxSize, FLEXCAN_TXQUEUE_TABLE _txSize>
-#define FCTPFD_OPT FlexCAN_T4FD<_bus, _rxSize, _txSize>
+#define FCTPFD_CLASS template<FLEXCAN_RXQUEUE_TABLE _rxSize = RX_SIZE_16, FLEXCAN_TXQUEUE_TABLE _txSize = TX_SIZE_16>
+#define FCTPFD_FUNC template<FLEXCAN_RXQUEUE_TABLE _rxSize, FLEXCAN_TXQUEUE_TABLE _txSize>
+#define FCTPFD_OPT FlexCAN_T4FD<_rxSize, _txSize>
 
 #define SIZE_LISTENERS 4
 
@@ -351,7 +351,7 @@ extern void ext_output3(const CAN_message_t &msg);
 
 FCTPFD_CLASS class FlexCAN_T4FD : public FlexCAN_T4_Base {
   public:
-    FlexCAN_T4FD();
+    FlexCAN_T4FD(CAN_DEV_TABLE bus);
     bool isFD() { return 1; }
     void begin();
     void setTX(FLEXCAN_PINS pin = DEF);
@@ -430,11 +430,12 @@ FCTPFD_CLASS class FlexCAN_T4FD : public FlexCAN_T4_Base {
     void struct2queueTx(const CANFD_message_t &msg);
     void struct2queueRx(const CANFD_message_t &msg);
     bool distribution = 0;
+    CAN_DEV_TABLE _bus;
 };
 
 FCTP_CLASS class FlexCAN_T4 : public FlexCAN_T4_Base {
   public:
-    FlexCAN_T4();
+    FlexCAN_T4(CAN_DEV_TABLE bus);
     CANListener *listener[SIZE_LISTENERS];
     bool attachObj (CANListener *listener);
     bool detachObj (CANListener *listener);
@@ -555,6 +556,7 @@ FCTP_CLASS class FlexCAN_T4 : public FlexCAN_T4_Base {
     uint8_t mailbox_reader_increment = 0;
     uint8_t busNumber;
     void mbCallbacks(const FLEXCAN_MAILBOX &mb_num, const CAN_message_t &msg);
+    CAN_DEV_TABLE _bus;
 };
 
 #include "FlexCAN_T4.tpp"

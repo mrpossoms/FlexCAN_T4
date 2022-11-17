@@ -33,7 +33,7 @@
 
 static void flexcan_isr_can3fd();
 
-FCTPFD_FUNC FCTPFD_OPT::FlexCAN_T4FD() {
+FCTPFD_FUNC FCTPFD_OPT::FlexCAN_T4FD(CAN_DEV_TABLE bus) : _bus(bus) {
   if ( _bus == CAN3 ) _CAN3 = this;
 }
 

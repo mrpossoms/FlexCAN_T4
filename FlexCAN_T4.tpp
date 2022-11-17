@@ -28,6 +28,7 @@
   SOFTWARE.
 */
 #include <FlexCAN_T4.h>
+#include <assert.h>
 #include "imxrt_flexcan.h"
 #include "Arduino.h"
 
@@ -44,7 +45,7 @@ static void flexcan_isr_can0();
 static void flexcan_isr_can1();
 #endif
 
-FCTP_FUNC FCTP_OPT::FlexCAN_T4() {
+FCTP_FUNC FCTP_OPT::FlexCAN_T4(CAN_DEV_TABLE bus) : _bus(bus) {
 #if defined(__IMXRT1062__)
   if ( _bus == CAN3 ) _CAN3 = this;
   if ( _bus == CAN2 ) _CAN2 = this;
@@ -62,7 +63,7 @@ FCTP_FUNC FCTP_OPT::FlexCAN_T4() {
   static_assert(_bus == CAN0 || _bus == CAN1, "Only CAN0 & CAN1 works on Teensy 3.6");
 #endif
 #if defined(__IMXRT1062__)
-  static_assert(_bus == CAN1 || _bus == CAN2 || _bus == CAN3, "Only CAN1 & CAN2 & CAN3 works on Teensy 4.0/4.1");
+  assert(_bus == CAN1 || _bus == CAN2 || _bus == CAN3); // "Only CAN1 & CAN2 & CAN3 works on Teensy 4.0/4.1"
 #endif
 
 }
